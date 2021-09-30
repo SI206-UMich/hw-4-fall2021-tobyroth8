@@ -81,17 +81,32 @@ class Stall:
         self.cost = cost
         self.earnings = earnings
 
-    def process_order(self, name, quantity):
-        if self.inventory[name] >= 0:
-            self.inventory[name] -= quantity
+    def process_order(self, food_name, quantity):
+            while self.has_item(food_name,quantity) == True:
+                self.inventory()[food_name] -= quantity
     
-    def has_item(self,name,quantity):
-        if self.inventory[name] > 0:
-            return True
+    def has_item(self,food_name,quantity):
+        for l,m in self.inventory.items():
+            if l == food_name and m >= quantity:
+                return True
+            else:
+                return False
+    
+    def stock_up(self,food_name, quantity):
+        if food_name not in self.inventory.keys():
+            self.inventory[food_name] = quantity
         else:
-            return False
+            self.inventory[food_name] + quantity
     
-    def stock_up(name, quantity):
+    def compute_cost(self,quantity):
+        total_order = quantity * self.cost
+        return total_order
+
+    def __str__(self):
+        return "Hello, we are " + self.name + "." + " This is the current menu" + str(list(inventory.keys())) + "." + " We charge" + self.cost + " per item. " + "We have " + total_order + "in total."
+
+
+
         
 
 
