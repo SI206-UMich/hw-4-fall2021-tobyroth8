@@ -87,11 +87,12 @@ class Stall:
                     self.inventory[name] -= quantity
     
     def has_item(self,name,quantity):
-        for l,m in self.inventory.items():
-            if l == name and m >= quantity:
+        for l in self.inventory.keys():
+            if name == l and self.inventory[l] >= quantity:
                 return True
-            else:
-                return False
+            else: 
+                if self.inventory[l] < quantity:
+                    return False
     
     def stock_up(self, name, quantity):
         if name not in self.inventory.keys():
@@ -128,56 +129,56 @@ class TestAllMethods(unittest.TestCase):
             for s in [self.s1,self.s2,self.s3]:
                 c.add_stall(s)
 
-	# ## Check to see whether constructors work
-    # def test_customer_constructor(self):
-    #     self.assertEqual(self.f1.name, "Ted")
-    #     self.assertEqual(self.f2.name, "Morgan")
-    #     self.assertEqual(self.f1.wallet, 100)
-    #     self.assertEqual(self.f2.wallet, 150)
+	## Check to see whether constructors work
+    def test_customer_constructor(self):
+        self.assertEqual(self.f1.name, "Ted")
+        self.assertEqual(self.f2.name, "Morgan")
+        self.assertEqual(self.f1.wallet, 100)
+        self.assertEqual(self.f2.wallet, 150)
 
-	# ## Check to see whether constructors work
-    # def test_cashier_constructor(self):
-    #     self.assertEqual(self.c1.name, "West")
-    #     #cashier holds the directory - within the directory there are three stalls
-    #     self.assertEqual(len(self.c1.directory), 3) 
+	## Check to see whether constructors work
+    def test_cashier_constructor(self):
+        self.assertEqual(self.c1.name, "West")
+        #cashier holds the directory - within the directory there are three stalls
+        self.assertEqual(len(self.c1.directory), 3) 
 
-	# ## Check to see whether constructors work
-    # def test_truck_constructor(self):
-    #     self.assertEqual(self.s1.name, "The Grill Queen")
-    #     self.assertEqual(self.s1.inventory, {"Burger":40, "Taco":50})
-    #     self.assertEqual(self.s3.earnings, 0)
-    #     self.assertEqual(self.s2.cost, 9)
+	## Check to see whether constructors work
+    def test_truck_constructor(self):
+        self.assertEqual(self.s1.name, "The Grill Queen")
+        self.assertEqual(self.s1.inventory, {"Burger":40, "Taco":50})
+        self.assertEqual(self.s3.earnings, 0)
+        self.assertEqual(self.s2.cost, 9)
 
-	# # Check that the stall can stock up properly.
-    # def test_stocking(self):
-    #     inventory = {"Burger": 10}
-    #     s4 = Stall("Misc Stall", inventory)
+	# Check that the stall can stock up properly.
+    def test_stocking(self):
+        inventory = {"Burger": 10}
+        s4 = Stall("Misc Stall", inventory)
 
-	# 	# Testing whether stall can stock up on items
-    #     self.assertEqual(s4.inventory, {"Burger": 10})
-    #     s4.stock_up("Burger", 30)
-    #     self.assertEqual(s4.inventory, {"Burger": 40})
+		# Testing whether stall can stock up on items
+        self.assertEqual(s4.inventory, {"Burger": 10})
+        s4.stock_up("Burger", 30)
+        self.assertEqual(s4.inventory, {"Burger": 40})
         
-    # def test_make_payment(self):
-	# 	# Check to see how much money there is prior to a payment
-    #     previous_custormer_wallet = self.f2.wallet
-    #     previous_earnings_stall = self.s2.earnings
+    def test_make_payment(self):
+		# Check to see how much money there is prior to a payment
+        previous_custormer_wallet = self.f2.wallet
+        previous_earnings_stall = self.s2.earnings
         
-    #     self.f2.submit_order(self.c1, self.s2, 30)
+        self.f2.submit_order(self.c1, self.s2, 30)
 
-	# 	# See if money has changed hands
-    #     self.assertEqual(self.f2.wallet, previous_custormer_wallet - 30)
-    #     self.assertEqual(self.s2.earnings, previous_earnings_stall + 30)
+		# See if money has changed hands
+        self.assertEqual(self.f2.wallet, previous_custormer_wallet - 30)
+        self.assertEqual(self.s2.earnings, previous_earnings_stall + 30)
 
 
-	# # Check to see that the server can serve from the different stalls
-    # def test_adding_and_serving_stall(self):
-    #     c3 = Cashier("North", directory = [self.s1, self.s2])
-    #     self.assertTrue(c3.has_stall(self.s1))
-    #     self.assertFalse(c3.has_stall(self.s3)) 
-    #     c3.add_stall(self.s3)
-    #     self.assertTrue(c3.has_stall(self.s3))
-    #     self.assertEqual(len(c3.directory), 3)
+	# Check to see that the server can serve from the different stalls
+    def test_adding_and_serving_stall(self):
+        c3 = Cashier("North", directory = [self.s1, self.s2])
+        self.assertTrue(c3.has_stall(self.s1))
+        self.assertFalse(c3.has_stall(self.s3)) 
+        c3.add_stall(self.s3)
+        self.assertTrue(c3.has_stall(self.s3))
+        self.assertEqual(len(c3.directory), 3)
 
 
 	# Test that computed cost works properly.
@@ -187,21 +188,25 @@ class TestAllMethods(unittest.TestCase):
         self.assertEqual(self.s1.compute_cost(4), 40)
         self.assertEqual(self.s3.compute_cost(3), 21)
 
-# 	# Check that the stall can properly see when it is empty
-#     def test_has_item(self):
-#         # Set up to run test cases
+	# Check that the stall can properly see when it is empty
+    def test_has_item(self):
+        # Set up to run test cases
 
-#         # Test to see if has_item returns True when a stall has enough items left
-#         # Please follow the instructions below to create three different kinds of test cases 
-#         # Test case 1: the stall does not have this food item: 
+        # Test to see if has_item returns True when a stall has enough items left
+        # Please follow the instructions below to create three different kinds of test cases 
+        self.assertFalse(self.s3.has_item("Cheese",1))
+        self.assertFalse(self.s3.has_item("Taco",51))
+        self.assertTrue(self.s3.has_item("Taco",5))
+        # Test case 1: the stall does not have this food item: 
+        # Test case 2: the stall does not have enough food item: 
+        # Test case 3: the stall has the food item of the certain quantity: 
         
-#         # Test case 2: the stall does not have enough food item: 
-        
-#         # Test case 3: the stall has the food item of the certain quantity: 
-#         pass
 
-# 	# Test validate order
-#     def test_validate_order(self):
+	# Test validate order
+    def test_validate_order(self):
+        self.f2.validate_order(self.c2,self.s2,"Burger",16)
+        self.f2.validate_order(self.c1,self.s1,"Taco",58)
+        self.f1.validate_order(self.c2,self.s2,"Burger",1)
 # 		# case 1: test if a customer doesn't have enough money in their wallet to order
 
 # 		# case 2: test if the stall doesn't have enough food left in stock
@@ -209,9 +214,11 @@ class TestAllMethods(unittest.TestCase):
 # 		# case 3: check if the cashier can order item from that stall
 #         pass
 
-#     # Test if a customer can add money to their wallet
-#     def test_reload_money(self):
-#         pass
+    # Test if a customer can add money to their wallet
+    def test_reload_money(self):
+        self.f2.reload_money(100)
+        self.assertEqual(self.f2.wallet,250)
+        
     
 # ### Write main function
 def main():
@@ -236,26 +243,6 @@ def main():
     c.validate_order(cash,s, "Pasta",1)
     c1.validate_order(cash,s, "Pasta",1)
     c2.validate_order(cash,s, "Pasta",1)
-
-
-     #case 1: test if a customer doesn't have enough money in their wallet to order
-
-# 		# case 2: test if the stall doesn't have enough food left in stock
-
-# 		# case 3: check if the cashier can order item from that stall
-#         pass
-
-#    # The customer orders the food and there could be different cases   
-#     def validate_order(self, cashier, stall, item_name, quantity):
-#         if not(cashier.has_stall(stall)):
-#             print("Sorry, we don't have that vendor stall. Please try a different one.")
-#         elif not(stall.has_item(item_name, quantity)):  
-#             print("Our stall has run out of " + item_name + " :( Please try a different stall!")
-#         elif self.wallet < stall.compute_cost(quantity): 
-#             print("Don't have enough money for that :( Please reload more money!")
-#         else:
-#             bill = cashier.place_order(stall, item_name, quantity) 
-#             self.submit_order(cashier, stall, bill) 
 
 
 
