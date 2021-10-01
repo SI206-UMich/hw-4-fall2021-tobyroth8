@@ -1,5 +1,6 @@
 
 import unittest
+import random
 
 # The Customer class
 # The Customer class represents a customer who will order from the stalls.
