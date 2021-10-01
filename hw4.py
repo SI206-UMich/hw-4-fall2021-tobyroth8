@@ -91,9 +91,8 @@ class Stall:
         for l in self.inventory.keys():
             if name == l and self.inventory[l] >= quantity:
                 return True
-            else: 
-                if self.inventory[l] < quantity:
-                    return False
+            if self.inventory[l] < quantity:
+                return False
     
     def stock_up(self, name, quantity):
         if name not in self.inventory.keys():
@@ -207,7 +206,7 @@ class TestAllMethods(unittest.TestCase):
     def test_validate_order(self):
         self.f2.validate_order(self.c2,self.s2,"Burger",16)
         self.f2.validate_order(self.c1,self.s1,"Taco",58)
-        self.f1.validate_order(self.c2,self.s2,"Burger",1)
+        self.f1.validate_order(self.c2,self.s2,"Taco",1)
 # 		# case 1: test if a customer doesn't have enough money in their wallet to order
 
 # 		# case 2: test if the stall doesn't have enough food left in stock
