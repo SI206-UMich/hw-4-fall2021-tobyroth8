@@ -91,7 +91,7 @@ class Stall:
         for l in self.inventory.keys():
             if name == l and self.inventory[l] >= quantity:
                 return True
-            return False
+        return False
     
     def stock_up(self, name, quantity):
         if name not in self.inventory.keys():
